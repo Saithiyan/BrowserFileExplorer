@@ -22,7 +22,7 @@ Pour installer et exécuter le projet, suivez ces étapes :
 
 1. **Clonez le dépôt :**
    ```bash
-   git clone https://github.com/<votre-nom-utilisateur>/BrowserFileExplorer.git
+   git clone https://github.com/Saithiyan/BrowserFileExplorer.git
    ```
 
 2. **Accédez au répertoire du projet :**
