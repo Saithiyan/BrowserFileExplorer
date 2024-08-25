@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorateur de Fichiers</title>
+    <link rel="stylesheet" href="/public/styles.css">
+
+    <style>
+        /* Le Dossier Perent : */
+        .body.light .perent-card, .perent-card{
+            background-color: #ec8200;
+            /* Au Survol */
+            &&:hover{
+                background: #ff8c00;
+            }
+        }
+        /* Les Fichiers */
+        .body.light .document-card, .document-card{
+            background-color: #457ef9c7;
+            /* Au Survol */
+            &&:hover{
+                background: #5a8effc7;
+            }
+        }
+
+    </style>
+</head>
+<body class="dark">
+    <div class="container">
+        <h1>Chemin : <%= currentPath %></h1>
+        <div class="header">
+            <h2>Explorateur de Fichiers</h2>
+            <div>
+                <button class="theme-switcher" onclick="toggleTheme()">Mode Clair/Sombre</button>
+                <button class="view-switcher" onclick="toggleView()">Vue Liste/Cartes</button>
+            </div>
+        </div>
+        <ul class="file-list">
+            <!-- Afficher le lien vers le dossier parent si disponible -->
+            <% if (parentPath && parentPath !== currentPath) { %>
+                <a href="<%= parentPath %>">
+                    <li class="file-item-perent perent-card">
+                        <img class="file-icon perent" src="/assets/icons/icons8-répertoire-symlink-100-w.png" alt="Dossier Parent">
+                        <span class="file-name">../ (Dossier Parent)</span>
+                    </li>
+                </a>    
+            <% } %>
+            
+            <!-- Afficher les fichiers et dossiers du répertoire actuel -->
+            <% files.forEach(function(file) { %>
+                <% if (file.isDirectory) { %>
+                    <a href="<%= file.isDirectory ? '/' + file.url + '/' : file.url %>">
+                        <li class="file-item">
+                            <img class="file-icon directory" src="/assets/icons/icons8-sous-module-de-fichier-100-w.png" alt="<%= file.name %>">
+                            <span class="file-name"><%= file.name %></span>
+                        </li>
+                    </a>
+                <% } else { %>
+                    <a href="<%= '/' + file.url %>" download="<%= file.name%>" >
+                        <li class="file-item-document document-card">
+                            <img class="download-button download" src="/assets/icons/icons8-télécharger-depuis-le-ftp-50-w.png"  alt="Télécharger">
+                            <img class="file-icon document" src="/assets/icons/icons8-document-100-w.png" alt="<%= file.name %>">
+                            <span class="file-name"><%= file.name %></span>
+                        </li>
+                    </a>
+                <% } %>
+            <% }); %>
+        </ul>
+    </div>
+    <script>
+
+        function chngimg(classImg, srcBlack, srcWhite) {
+            let classList = document.querySelectorAll(classImg);
+
+            classList.forEach(element => {
+                let currentSRC = element.attributes[1].nodeValue;
+                if (currentSRC == srcBlack ) {
+                    element.attributes[1].nodeValue = srcWhite;
+                } else {
+                    element.attributes[1].nodeValue = srcBlack;
+                }
+            });
+        }
+
+        // Fonction pour basculer entre le mode clair et sombre
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            
+            chngimg(".perent", "/assets/icons/icons8-répertoire-symlink-100.png", "/assets/icons/icons8-répertoire-symlink-100-w.png");
+            chngimg(".directory", "/assets/icons/icons8-sous-module-de-fichier-100.png", "/assets/icons/icons8-sous-module-de-fichier-100-w.png");
+            chngimg(".download", "/assets/icons/icons8-télécharger-depuis-le-ftp-50.png", "/assets/icons/icons8-télécharger-depuis-le-ftp-50-w.png");
+            chngimg(".document", "/assets/icons/icons8-document-100.png", "/assets/icons/icons8-document-100-w.png");
+        }
+    
+
+        // Fonction pour basculer entre la vue en liste et en cartes
+        function toggleView() {
+            document.querySelector('.file-list').classList.toggle('list-view');
+        }
+        
+    </script>
+</body>
+</html>
